@@ -1,7 +1,5 @@
 <template>
-
     <div class="is-wrapper"></div>
-    
 </template>
 
 <script>
@@ -52,9 +50,7 @@ export default {
         
                 // Upload process
                 axios.post('/upload', { image: base64, filename: filename }).then((response)=>{
-                    
                     callback(response);
-        
                 }).catch((err)=>{
                     console.log(err)
                 });
@@ -63,18 +59,14 @@ export default {
         }
 
         onMounted(() => {
-  
             // Load language file first
             loadLanguageFile('contentbox/lang/en.js', ()=>{
-
                 // Then run the ContentBuilder
                 obj.value = new ContentBox({
                     wrapper: '.is-wrapper',
-
                     imageSelect: '/assets.html',
                     fileSelect: '/assets.html',
                     videoSelect: '/assets.html',
-
                     slider: 'glide',
 
                     onUploadCoverImage: (e) => {
@@ -95,7 +87,6 @@ export default {
                             obj.value.returnUrl(uploadedFileUrl); 
                         });
                     },   
-
                     onChange: ()=>{
                         //Auto Save
                         clearTimeout(timeoutId.value);
@@ -103,7 +94,6 @@ export default {
                             save();                    
                         }, 1000);
                     },
-
                     /* ContentBox settings */
                     // designUrl1: 'assets/designs/basic.js',
                     // designUrl2: 'assets/designs/examples.js',
@@ -118,9 +108,7 @@ export default {
                     // snippetPath: 'assets/minimalist-blocks/',
                     // pluginPath: 'contentbuilder/', 
                     // useLightbox: true,
-
                 });
-        
                 // Example of adding buttons on the sidebar
                 obj.value.addButton({ 
                     'pos': 2, // button position
@@ -130,7 +118,6 @@ export default {
                         obj.value.undo();
                     }
                 });
-
                 obj.value.addButton({ 
                     'pos': 3, // button position
                     'title': 'Redo', // title
@@ -139,13 +126,11 @@ export default {
                         obj.value.redo();
                     }
                 });
-
                 obj.value.addButton({ 
                     'pos': 5, // button position
                     'title': 'Preview', // title
                     'html': '<svg class="is-icon-flex" style="width:16px;height:16px;"><use xlink:href="#ion-eye"></use></svg>', // icon
                     'onClick': ()=>{
-
                         let html = obj.value.html();
                         localStorage.setItem('preview-html', html); 
                         let mainCss = obj.value.mainCss(); 
@@ -156,20 +141,15 @@ export default {
                         window.open('/preview.html', '_blank').focus();
                     }
                 });
-
                 // Load content from the server
                 axios.get('/load').then((response)=>{
-
                     let html, mainCss, sectionCss;
 
                     if(response.data.html) {
-
                         html = response.data.html;
                         mainCss = response.data.mainCss;
                         sectionCss = response.data.sectionCss;
-
                     } else {  // Or load sample content on first start
-
                         html = `
                         <div class="is-section is-section-100 is-shadow-1 is-bg-grey">
                             <div class="is-boxes">
@@ -212,31 +192,22 @@ export default {
                         mainCss = '';
                         sectionCss = '';
                     }
-
                     obj.value.loadStyles(mainCss, sectionCss);
                     obj.value.loadHtml(html);
 
                     // Add required scripts for viewing the content
                     addExternalScripts('box/box-flex.js');
-
                 });
-
             });
-            
-
         })
-
         onBeforeUnmount(() => {
             return obj.value.destroy()
         })
-
         const save = (callback) => {
-
             // Save all embedded base64 images first
             obj.value.saveImages('', ()=>{
 
                 // Then save the content
-
                 let html = obj.value.html();
                 let mainCss = obj.value.mainCss(); //mainCss() returns the default typography style.
                 let sectionCss = obj.value.sectionCss(); //sectionCss returns typography styles applied for specific sections.
@@ -247,31 +218,21 @@ export default {
                 };
         
                 axios.post('/save', data).then((response)=>{
-        
                     // Saved Successfully
                     if(callback) callback(html, mainCss, sectionCss);
-        
                 }).catch((err)=>{
                     console.log(err);
                 });
-                
             }, (img, base64, filename)=>{
-
                 // Upload image process for base64 images
                 axios.post('/upload', { image: base64, filename: filename }).then((response)=>{
-                    
                     const uploadedImageUrl = response.data.url; // get saved image url
-
                     img.setAttribute('src', uploadedImageUrl); // set image src
-
                 }).catch((err)=>{
                     console.log(err)
                 });
-                
             });
-
         }
-
         return { 
             save
         }

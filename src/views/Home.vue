@@ -1,6 +1,5 @@
 <template>
     <router-link class="edit" to="/edit">Edit</router-link>
-
     <div class="is-wrapper"></div>
 </template>
 
@@ -15,22 +14,16 @@ export default {
         html: String
     },
     setup() {
-        
         onMounted(() => {
-            
             // Load content from the server
             axios.get('/load').then((response)=>{
-                
                 let html, mainCss, sectionCss;
 
                 if(response.data.html) {
-
                     html = response.data.html;
                     mainCss = response.data.mainCss;
                     sectionCss = response.data.sectionCss;
-
                 } else {  //  If server returns empty (initial start), then load sample content.
-
                     html = `
                     <div class="is-section is-section-100 is-shadow-1 is-bg-grey">
                         <div class="is-boxes">
@@ -86,11 +79,8 @@ export default {
                 // Show
                 const wrapper = document.querySelector('.is-wrapper');
                 wrapper.style.opacity = 1;
-
             });
-            
         })
-
         return { 
             
         }
